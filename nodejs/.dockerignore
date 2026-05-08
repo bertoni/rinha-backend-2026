@@ -1,5 +1,0 @@
-dist/
-node_modules/
-src/test/
-nginx.conf
-k6/
