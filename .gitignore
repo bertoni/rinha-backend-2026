@@ -1,5 +1,0 @@
-k6/results.json
-python/__pycache__/
-python/.venv/
-python/index.faiss
-python/labels.bin

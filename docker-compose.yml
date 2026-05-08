@@ -26,9 +26,7 @@ services:
       - rinha
 
   faiss1: &faiss
-    build:
-      context: ./python/
-    image: fraud-faiss-api
+    image: bertoni/fraud-faiss-api:latest
     platform: linux/x86_64
     hostname: faiss1
     restart: always
