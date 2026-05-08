@@ -1,0 +1,123 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+        "type": "string",
+        "minLength": 1
+    },
+    "transaction": {
+        "type": "object",
+        "properties": {
+            "amount": {
+                "type": "number",
+                "minimum": 0
+            },
+            "installments": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "requested_at": {
+                "type": "string",
+                "format": "date-time"
+            }
+        },
+        "required": [
+            "amount",
+            "installments",
+            "requested_at"
+        ]
+    },
+    "customer": {
+        "type": "object",
+        "properties": {
+            "avg_amount": {
+                "type": "number",
+                "minimum": 0
+            },
+            "tx_count_24h": {
+                "type": "integer",
+                "minimum": 0
+            },
+            "known_merchants": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "required": [
+            "avg_amount",
+            "tx_count_24h",
+            "known_merchants"
+        ]
+    },
+    "merchant": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string",
+                "minLength": 1
+            },
+            "mcc": {
+                "type": "string",
+                "minLength": 1
+            },
+            "avg_amount": {
+                "type": "number",
+                "minimum": 0
+            }
+        },
+        "required": [
+            "id",
+            "mcc",
+            "avg_amount"
+        ]
+    },
+    "terminal": {
+        "type": "object",
+        "properties": {
+            "is_online": {
+                "type": "boolean"
+            },
+            "card_present": {
+                "type": "boolean"
+            },
+            "km_from_home": {
+                "type": "number",
+                "minimum": 0
+            }
+        },
+        "required": [
+            "is_online",
+            "card_present",
+            "km_from_home"
+        ]
+    },
+    "last_transaction": {
+        "type": "object",
+        "nullable": true,
+        "properties": {
+            "timestamp": {
+                "type": "string",
+                "format": "date-time"
+            },
+            "km_from_current": {
+                "type": "number",
+                "minimum": 0
+            }
+        },
+        "required": [
+            "timestamp",
+            "km_from_current"
+        ]
+    }
+  },
+  "required": [
+    "id",
+    "transaction",
+    "customer",
+    "merchant",
+    "terminal"
+  ],
+  "additionalProperties": true
+}
