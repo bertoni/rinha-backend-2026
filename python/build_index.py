@@ -6,7 +6,6 @@ import faiss
 # -------------------
 # LOAD DATA
 # -------------------
-# with open(f"./data/references.json") as f:
 with gzip.open("./data/references.json.gz", "rt", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -38,12 +37,28 @@ dim = vectors.shape[1]
 # index.train(vectors)
 
 # Opção com IVF PQ
-nlist = 16
-m = 2          # número de subvetores
-bits = 8       # compressão
+# nlist = 4096
+# m = 2          # número de subvetores
+# bits = 8       # compressão
+# quantizer = faiss.IndexFlatIP(dim)
+# index = faiss.IndexIVFPQ(quantizer, dim, nlist, m, bits)
+# index.train(vectors)
+
+# ---------------------
+# Opção com IVF Scalar
+dim = 14
+nlist = 4096
+bits = 8
 quantizer = faiss.IndexFlatIP(dim)
-index = faiss.IndexIVFPQ(quantizer, dim, nlist, m, bits)
+index = faiss.IndexIVFScalarQuantizer(quantizer, dim, nlist, bits, faiss.METRIC_INNER_PRODUCT)
+vectors = np.ascontiguousarray(
+    [item["vector"] for item in data],
+    dtype=np.float32
+)
+faiss.normalize_L2(vectors)
 index.train(vectors)
+# Opção com IVF Scalar
+# ---------------------
 
 
 index.add(vectors)

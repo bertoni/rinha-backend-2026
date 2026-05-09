@@ -18,7 +18,7 @@ def load_data():
     index = faiss.read_index("index.faiss")
     
     # Opção com IVF Flat
-    index.nprobe = 3
+    index.nprobe = 16
     
     # Opção com HNSW
     # index.hnsw.efSearch = 32
@@ -150,7 +150,8 @@ class PredictResource:
             payload = PredictRequest(**body)
 
             transactions_history: int = 5
-            query = np.array([payload.normalization()]).astype("float32")
+            # query = np.array([payload.normalization()]).astype("float32")
+            query = np.ascontiguousarray([payload.normalization()], dtype=np.float32)
             faiss.normalize_L2(query)
 
             distances, indices = index.search(query, transactions_history)

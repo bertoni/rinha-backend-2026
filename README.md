@@ -45,3 +45,10 @@ Usando o mesmo k6, para rodar os testes locais:
 cd k6/
 docker run --rm -i -u $(id -u) -v $PWD:/app -w /app  --network="host" grafana/k6 run - <test.js
 ```
+
+
+## Versões e métricas
+
+| Versão | Score | p99 | TP (True Positive) | TN (True Negative) | FP (False Positive) | FN (False Negative) | Failure Rate | Obs |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | -6000 | 2002.11ms | 4749 | 6933 | 120 | 839 | 32.16% | Modelo em HTTP com IVFPQ (nlist=16, m=2, bits=8) |
