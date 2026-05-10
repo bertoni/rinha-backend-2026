@@ -1,4 +1,4 @@
-import json
+import orjson
 import numpy as np
 import faiss
 import falcon.asgi
@@ -18,7 +18,7 @@ def load_data():
     index = faiss.read_index("index.faiss")
     
     # Opção com IVF Flat
-    index.nprobe = 16
+    index.nprobe = 32
     
     # Opção com HNSW
     # index.hnsw.efSearch = 32
@@ -145,11 +145,15 @@ class HealthResource:
 class PredictResource:
     async def on_post(self, req, resp):
         try:
-            body = await req.get_media()
-
-            payload = PredictRequest(**body)
+            # body = await req.get_media()
+            # payload = PredictRequest(**body)
+            # Melhor otimizado
+            raw = await req.stream.read()
+            data = orjson.loads(raw)
+            payload = PredictRequest(**data)
 
             transactions_history: int = 5
+            faiss.omp_set_num_threads(1)
             # query = np.array([payload.normalization()]).astype("float32")
             query = np.ascontiguousarray([payload.normalization()], dtype=np.float32)
             faiss.normalize_L2(query)
@@ -163,20 +167,24 @@ class PredictResource:
             fraud_score = results.count('fraud') / transactions_history
             approved = fraud_score < 0.6
 
-            resp.media = {
+            resp.content_type = "application/json"
+            resp.status = falcon.HTTP_200
+            resp.data = orjson.dumps({
                 "approved": approved,
                 "fraud_score": fraud_score,
-            }
+            })
         except ValidationError as e:
+            resp.content_type = "application/json"
             resp.status = falcon.HTTP_400
-            resp.media = {
-                "errors": e.errors()
-            }
+            resp.media = orjson.dumps({
+                "errors": e.errors(),
+            })
         except Exception as e:
+            resp.content_type = "application/json"
             resp.status = falcon.HTTP_500
-            resp.media = {
-                "error": str(e)
-            }
+            resp.media = orjson.dumps({
+                "error": str(e),
+            })
 
 
 app.add_route("/ready", HealthResource())

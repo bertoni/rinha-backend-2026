@@ -47,7 +47,7 @@ dim = vectors.shape[1]
 # ---------------------
 # Opção com IVF Scalar
 dim = 14
-nlist = 4096
+nlist = 8192
 bits = 8
 quantizer = faiss.IndexFlatIP(dim)
 index = faiss.IndexIVFScalarQuantizer(quantizer, dim, nlist, bits, faiss.METRIC_INNER_PRODUCT)
