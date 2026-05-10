@@ -28,12 +28,17 @@ services:
       - rinha
 
   faiss1: &faiss
-    image: bertoni/fraud-faiss-api:2
+    image: bertoni/fraud-faiss-api:3
     platform: linux/x86_64
     hostname: faiss1
     restart: always
     volumes:
       - sock:/run/sock
+    environment:
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - OPENBLAS_NUM_THREADS=1
+      - NUMEXPR_NUM_THREADS=1
     command: >
       uvicorn main:app
       --uds /run/sock/uvicorn1.sock
