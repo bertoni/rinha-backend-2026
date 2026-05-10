@@ -10,8 +10,6 @@ idna==3.13
 numpy==2.4.4
 orjson==3.11.9
 packaging==26.2
-pydantic==2.13.3
-pydantic_core==2.46.3
 python-dotenv==1.2.2
 PyYAML==6.0.3
 typing-inspection==0.4.2
